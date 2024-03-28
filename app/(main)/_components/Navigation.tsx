@@ -32,7 +32,7 @@ import { DocumentList } from './document-list';
 import { TrashBox } from './trash-box';
 import { Navbar } from './navbar';
 
-export const Navigation = () => {
+const Navigation = () => {
   const router = useRouter();
   const settings = useSettings();
   const search = useSearch();
@@ -206,3 +206,5 @@ export const Navigation = () => {
     </>
   );
 };
+
+export default Navigation;

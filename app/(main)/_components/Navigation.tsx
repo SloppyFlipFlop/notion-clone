@@ -26,6 +26,7 @@ import Item from './Item';
 import toast from 'sonner';
 
 import { useSearch } from '@/hooks/use-search';
+import { useSettings } from '@/hooks/use-settings';
 
 import {
   Popover,
@@ -39,6 +40,7 @@ import DocumentList from './document-list';
 
 const Navigation = () => {
   const search = useSearch();
+  const settings = useSettings();
   const pathname = usePathname();
   const isMobile = useMediaQuery('(max-width: 768px)'); // same as md in tailwind
   const createDocument = useMutation(api.documents.create);
@@ -158,7 +160,7 @@ const Navigation = () => {
         <div>
           <UserItem />
           <Item onClick={search.onOpen} label='Search' isSearch icon={Search} />
-          <Item onClick={() => {}} label='Setting' icon={Settings} />
+          <Item onClick={settings.onOpen} label='Setting' icon={Settings} />
           <Item
             onClick={handleCreateDocument}
             label='New Page'

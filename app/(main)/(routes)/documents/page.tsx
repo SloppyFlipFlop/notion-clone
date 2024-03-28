@@ -6,17 +6,20 @@ import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const Documents = () => {
+  const router = useRouter();
+
   const { user } = useUser();
 
   const create = useMutation(api.documents.create);
 
   const handleCreateDocument = async () => {
-    const promise = create({
-      title: 'Untitled Document',
-    });
+    const promise = create({ title: 'Untitled Document' }).then((documentId) =>
+      router.push(`/documents/${documentId}`)
+    );
 
     toast.promise(promise, {
       loading: 'Creating note...',

@@ -10,7 +10,7 @@ import {
   Trash,
   Settings,
 } from 'lucide-react';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, {
   ElementRef,
   useRef,
@@ -40,6 +40,7 @@ import { TrashBox } from './trash-box';
 import DocumentList from './document-list';
 
 const Navigation = () => {
+  const router = useRouter();
   const search = useSearch();
   const settings = useSettings();
   const pathname = usePathname();
@@ -130,7 +131,7 @@ const Navigation = () => {
   const handleCreateDocument = () => {
     const promise = createDocument({
       title: 'Untitled Document',
-    });
+    }).then((documentId) => router.push(`/documents/${documentId}`));
 
     toast.promise(promise, {
       loading: 'Creating a new note...',

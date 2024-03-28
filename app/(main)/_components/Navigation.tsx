@@ -11,6 +11,7 @@ import React, {
   useEffect,
 } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
+import UserItem from './user-items';
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -117,7 +118,7 @@ const Navigation = () => {
           <ChevronsLeft className='w-6 h-6' />
         </div>
         <div>
-          <p>Action items</p>
+          <UserItem />
         </div>
         <div className='mt-4'>
           <p>Documents</p>

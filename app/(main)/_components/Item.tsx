@@ -1,23 +1,22 @@
 'use client';
 
-import { Id } from '@/convex/_generated/dataModel';
-import { cn } from '@/lib/utils';
 import {
-  LucideIcon,
-  ChevronRight,
   ChevronDown,
+  ChevronRight,
+  LucideIcon,
   MoreHorizontal,
   Plus,
   Trash,
 } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
-
 import { useMutation } from 'convex/react';
-import { api } from '@/convex/_generated/api';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { useUser } from '@clerk/clerk-react';
 
+import { Id } from '@/convex/_generated/dataModel';
+import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { api } from '@/convex/_generated/api';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -39,7 +38,7 @@ interface ItemProps {
   icon: LucideIcon;
 }
 
-const Item = ({
+export const Item = ({
   id,
   label,
   onClick,
@@ -53,7 +52,7 @@ const Item = ({
 }: ItemProps) => {
   const { user } = useUser();
   const router = useRouter();
-  const createDocument = useMutation(api.documents.create);
+  const create = useMutation(api.documents.create);
   const archive = useMutation(api.documents.archive);
 
   const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -68,30 +67,29 @@ const Item = ({
     });
   };
 
-  const handleExpand = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handleExpand = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
     onExpand?.();
   };
 
-  const handleCreateDocument = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
+  const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
     if (!id) return;
-
-    const promise = createDocument({
-      title: 'Untitled Document',
-      parentDocument: id,
-    }).then((documentId) => {
-      if (!expanded) {
-        onExpand?.();
+    const promise = create({ title: 'Untitled', parentDocument: id }).then(
+      (documentId) => {
+        if (!expanded) {
+          onExpand?.();
+        }
+        router.push(`/documents/${documentId}`);
       }
-      router.push(`/documents/${documentId}`);
-    });
+    );
+
     toast.promise(promise, {
       loading: 'Creating a new note...',
       success: 'New note created!',
-      error: 'Failed to create new note. Please try again.',
+      error: 'Failed to create a new note.',
     });
   };
 
@@ -101,9 +99,11 @@ const Item = ({
     <div
       onClick={onClick}
       role='button'
-      style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
+      style={{
+        paddingLeft: level ? `${level * 12 + 12}px` : '12px',
+      }}
       className={cn(
-        'group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center font-medium text-muted-foreground',
+        'group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium',
         active && 'bg-primary/5 text-primary'
       )}
     >
@@ -117,19 +117,16 @@ const Item = ({
         </div>
       )}
       {documentIcon ? (
-        <div>{documentIcon}</div>
+        <div className='shrink-0 mr-2 text-[18px]'>{documentIcon}</div>
       ) : (
         <Icon className='shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground' />
       )}
-
       <span className='truncate'>{label}</span>
-
       {isSearch && (
-        <kbd className='ml-auto pointer-events-none inline-flex h-5 select-none  items-center gap-1 rounded border bg-muted font-mono px-1.5 text-[10px] font-medium text-muted-foreground opacity-100'>
+        <kbd className='ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100'>
           <span className='text-xs'>⌘</span>K
         </kbd>
       )}
-
       {!!id && (
         <div className='ml-auto flex items-center gap-x-2'>
           <DropdownMenu>
@@ -159,7 +156,7 @@ const Item = ({
           </DropdownMenu>
           <div
             role='button'
-            onClick={handleCreateDocument}
+            onClick={onCreate}
             className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
           >
             <Plus className='h-4 w-4 text-muted-foreground' />
@@ -173,13 +170,13 @@ const Item = ({
 Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
   return (
     <div
-      style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
+      style={{
+        paddingLeft: level ? `${level * 12 + 25}px` : '12px',
+      }}
       className='flex gap-x-2 py-[3px]'
     >
-      <Skeleton className='w-4 h-4' />
-      <Skeleton className='w-[30%] h-4' />
+      <Skeleton className='h-4 w-4' />
+      <Skeleton className='h-4 w-[30%]' />
     </div>
   );
 };
-
-export default Item;

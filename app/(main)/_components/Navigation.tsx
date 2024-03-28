@@ -25,6 +25,8 @@ import { api } from '@/convex/_generated/api';
 import Item from './Item';
 import toast from 'sonner';
 
+import { useSearch } from '@/hooks/use-search';
+
 import {
   Popover,
   PopoverTrigger,
@@ -36,6 +38,7 @@ import { TrashBox } from './trash-box';
 import DocumentList from './document-list';
 
 const Navigation = () => {
+  const search = useSearch();
   const pathname = usePathname();
   const isMobile = useMediaQuery('(max-width: 768px)'); // same as md in tailwind
   const createDocument = useMutation(api.documents.create);
@@ -154,7 +157,7 @@ const Navigation = () => {
         </div>
         <div>
           <UserItem />
-          <Item onClick={() => {}} label='Search' isSearch icon={Search} />
+          <Item onClick={search.onOpen} label='Search' isSearch icon={Search} />
           <Item onClick={() => {}} label='Setting' icon={Settings} />
           <Item
             onClick={handleCreateDocument}

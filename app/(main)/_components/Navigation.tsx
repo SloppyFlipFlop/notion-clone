@@ -9,6 +9,7 @@ import {
   Settings,
   Trash,
 } from 'lucide-react';
+
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { ElementRef, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
